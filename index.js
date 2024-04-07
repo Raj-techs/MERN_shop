@@ -18,5 +18,7 @@ app.use("/vendor",vendorRoutes)
 app.use("/firm",firmRoutes)
 app.use("/product",productRoutes)
 app.use("/uploads",express.static('uploads'))
-
+app.get('/',(req,res)=>{
+    res.status(201).send("Hello rajesh")
+})
 app.listen(PORT,_=>console.log(`server started at ${PORT}`))
