@@ -1,26 +1,27 @@
+const User = require("../models/usersModel")
+const dotenv = require("dotenv")
+dotenv.config()
 const jwt = require("jsonwebtoken")
-const Vendor = require("../models/Vendor")
-const dotEnv = require("dotenv")
-dotEnv.config()
 const secretKey = process.env.WhatIsYourName
+
 const verifyToken = async(req,res,next)=>{
+    const token = req.headers.token;
+    if(!token){
+        return res.status(401).send({message:"token is required"})
+    }
     try {
-        const token = req.headers.token;
-        if(!token){
-            res.status(401).send({error:"Token not found"})
+        const decoded = jwt.verify(token,secretKey);
+        const user = await User.findById(decoded.userId);
+
+        if(!user){
+            return res.status(404).send({error:"user not found"})
         }
-        const decoded = jwt.verify(token,secretKey)
-        const vendor = await Vendor.findById(decoded.vendorId)
-        console.log(vendor)
-        if(!vendor){
-            res.status(401).send({error:"vendor not found"})
-        }
-        req.vendorId = vendor._id
+        req.userId = user._id
         next()
     } catch (err) {
-        console.log(err)
-        res.status(401).send({error:"verifyToken error"})
+        console.log(err);   
+        return res.status(500).json({error:"verifyToken internal error"})
     }
 }
 
-module.exports=verifyToken
+module.exports = verifyToken
