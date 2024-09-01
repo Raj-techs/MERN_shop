@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-const User = require("../models/user-model")
-=======
 const User = require("../models/usersModel")
->>>>>>> decdbbf347bea223ac7558e468064e88b7874b83
 const dotenv = require("dotenv")
 dotenv.config()
 const jwt = require("jsonwebtoken")
